@@ -1,0 +1,26 @@
+---
+title: "ESS330 Yellowstone Project"
+authors:
+  - name: Sammy Tetrault
+    affiliation: CSU
+    roles: coding
+    corresponding: true
+  - name: Zoe Gagalis
+    affiliation: CSU
+    roles: coding
+    corresponding: true
+  - name: Zoe Ellis
+    affiliation: CSU
+    roles: coding
+    corresponding: true
+date: "2025-04-09"
+format: html
+execute:
+  echo: true
+bibliography: references.bib
+---
+## Data Exploration
+##### Data Description
+The data that we are looking at comes from a study conducted by David Cooper and Tom Hobbs of Colorado State University. Their study investigated Salix height as a response to browsing and the water table [@cooper].
+```{r}
+
