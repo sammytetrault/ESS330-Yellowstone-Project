@@ -34,11 +34,14 @@ The data that we are looking at comes from a study conducted by David Cooper and
 ```{r}
 library(readr)
 
-bison_data <- read_csv("data/BisonData2000_2023.csv")
+library(here)
 
-elk_data <- read_csv("data/corrected_elk_counts_09Jul2023_Park_only.csv")
+bison_data <- read_csv(here("data", "BisonData2000_2023.csv"))
 
-wolf_data <- read_csv("data/wolf_1995_2022_population_ynp_nr_nnrr.csv")
+elk_data <- read_csv(here("data", "corrected_elk_counts_09Jul2023_Park_only.csv"))
+
+wolf_data <- read_csv(here("data", "wolf_1995_2022_population_ynp_nr_nnrr.csv"))
+
 ```
 
 #### Cleaning the data
@@ -92,13 +95,13 @@ wolf_pop_plot = ggplot(data = data, aes(x = year, y = wolf_count)) +
   labs(title = "Yellowstone Wolf Population 2000-2021",
        x = "year",
        y = "wolf count") +
+  theme_light() +
 # making axes nicely visible
   theme(axis.title.x = element_text(size = 12),
         axis.title.y = element_text(size = 12),
         axis.text.x = element_text(size = 10, color = "black"),
         axis.text.y = element_text(size = 10, color = "black"),
-        axis.line = element_line(color = "black", size = 0.5)) +
-  theme_light()
+        axis.line = element_line(color = "black", size = 0.5))
 
 print(wolf_pop_plot)
 
@@ -107,13 +110,13 @@ elk_pop_plot <- ggplot(data = data, aes(x = year, y = elk_count)) +
   labs(title = "Yellowstone Elk Population 2000-2021",
        x = "year",
        y = "elk count") +
+  theme_light()+
 # making axes nicely visible
   theme(axis.title.x = element_text(size = 12),
         axis.title.y = element_text(size = 12),
         axis.text.x = element_text(size = 10, color = "black"),
         axis.text.y = element_text(size = 10, color = "black"),
-        axis.line = element_line(color = "black", size = 0.5)) +
-  theme_light()
+        axis.line = element_line(color = "black", size = 0.5))
 
 print(elk_pop_plot)
 
@@ -122,13 +125,13 @@ bison_pop_plot <- ggplot(data = data, aes(x = year, y = bison_count)) +
   labs(title = "Yellowstone Bison Population 2000-2021",
        x = "year",
        y = "bison count") +
+  theme_light() +
 # making axes nicely visible
   theme(axis.title.x = element_text(size = 12),
         axis.title.y = element_text(size = 12),
         axis.text.x = element_text(size = 10, color = "black"),
         axis.text.y = element_text(size = 10, color = "black"),
-        axis.line = element_line(color = "black", size = 0.5)) +
-  theme_light()
+        axis.line = element_line(color = "black", size = 0.5)) 
 
 print(bison_pop_plot)
 ```
