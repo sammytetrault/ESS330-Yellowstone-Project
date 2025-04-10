@@ -196,6 +196,10 @@
 <meta name="citation_online_date" content="2025-04-10">
 <meta name="citation_language" content="en">
 <meta name="citation_reference" content="citation_title=Twenty years of salix height in response to experimental manipulation of browsing and water table, northern range of yellowstone national park;,citation_author=DJ Cooper;,citation_author=NT Hobbs;,citation_publication_date=2023;,citation_cover_date=2023;,citation_year=2023;,citation_journal_title=Dryad, Dataset. https://doi. org/10.5061/dryad. sqv9s4n7n;">
+<meta name="citation_reference" content="citation_title=Trophic cascades in yellowstone: The first 15 years after wolf reintroduction;,citation_abstract=The 1995/1996 reintroduction of gray wolves (Canis lupus) into Yellowstone National Park after a 70 year absence has allowed for studies of tri-trophic cascades involving wolves, elk (Cervus elaphus), and plant species such as aspen (Populus tremuloides), cottonwoods (Populus spp.), and willows (Salix spp.). To investigate the status of this cascade, in September of 2010 we repeated an earlier survey of aspen and measured browsing and heights of young aspen in 97 stands along four streams in the Lamar River catchment of the park’s northern winter range. We found that browsing on the five tallest young aspen in each stand decreased from 100;,citation_author=William J. Ripple;,citation_author=Robert L. Beschta;,citation_publication_date=2012;,citation_cover_date=2012;,citation_year=2012;,citation_fulltext_html_url=https://doi.org/10.1016/j.biocon.2011.11.005.
+(https://www.sciencedirect.com/science/article/pii/S0006320711004046);,citation_issn=0006-3207;,citation_volume=145;,citation_journal_title=Biological Conservation;">
+<meta name="citation_reference" content="citation_title=Temporal variation in wolf predation dynamics in yellowstone: Lessons learned from two decades of research;,citation_author=MC Metz;,citation_author=DW Smith;,citation_author=DR Stahler;,citation_author=JA Vucetich;,citation_author=RO Peterson;,citation_publication_date=2016;,citation_cover_date=2016;,citation_year=2016;,citation_volume=24;,citation_journal_title=Yellowstone Science;">
+<meta name="citation_reference" content="citation_title=Wolf–bison interactions in yellowstone national park;,citation_author=Douglas W Smith;,citation_author=L David Mech;,citation_author=Mary Meagher;,citation_author=Wendy E Clark;,citation_author=Rosemary Jaffe;,citation_author=Michael K Phillips;,citation_author=John A Mack;,citation_publication_date=2000;,citation_cover_date=2000;,citation_year=2000;,citation_issue=4;,citation_volume=81;,citation_journal_title=Journal of Mammalogy;,citation_publisher=American Society of Mammalogists;">
 </head>
 
   <body class="quarto-notebook">
@@ -273,7 +277,9 @@
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#data-exploration-all-done-by-sammy-tetrault" id="toc-data-exploration-all-done-by-sammy-tetrault" class="nav-link active" data-scroll-target="#data-exploration-all-done-by-sammy-tetrault">Data Exploration, all done by Sammy Tetrault</a></li>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration">Data Exploration</a></li>
+  <li><a href="#preliminary-methods" id="toc-preliminary-methods" class="nav-link" data-scroll-target="#preliminary-methods">Preliminary Methods</a></li>
   </ul>
 </nav>
 </div>
@@ -281,8 +287,12 @@
 </div>
 <main class="content quarto-banner-title-block" id="quarto-document-content">      
 
-       <section id="data-exploration-all-done-by-sammy-tetrault" class="level2">
-<h2 class="anchored" data-anchor-id="data-exploration-all-done-by-sammy-tetrault">Data Exploration, all done by Sammy Tetrault</h2>
+       <section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>Wolf reintroduction after their nearly 70-year absence in Yellowstone National Park has been one of the most highly monitored, discussed, and debated wildlife restoration efforts in recent decades. Following the reintroduction of the wolves (Canis lupus) to this part of Wyoming as a wildlife conservation effort, there have been noticeable changes to surrounding ecosystems, including other mammal populations such as bison and elk, as well as plant populations such as willows and other riparian vegetation within the national park <span class="citation" data-cites="ripple2012">(<a href="#ref-ripple2012" role="doc-biblioref">Ripple &amp; Beschta, 2012</a>)</span>. With how extensive this research is presented, as well as how long the study has gone on for, our goal is to zoom in on aspects regarding the predator/prey relationship and its overall effect on Yellowstone. Our project, which will have a primary focus on species population dynamics and trends, will aim to understand and explain these impacts and how trophic cascades can have an enormous and lasting impact on ecosystems. Importantly, these effects are not always straightforwardly positive or negative. While wolf reintroduction has supported the regrowth of riparian habitats and enhanced biodiversity in some areas, it has also shifted the dynamics of competition among prey species and changed the structure of Yellowstone’s food webs. By exploring how these interactions evolve over time, we aim to highlight the multifaceted and interconnected nature of ecosystem responses to change. The project and analysis will focus on how these trophic interactions can change, help, and hinder surrounding habitats, ecosystems, and food webs. We suspect that the analysis of the data we have gathered on wolf reintroduction in the park regarding species population counts will reveal dramatic changes in the populations of both elk and bison, and will illustrate how bringing wolves back to this area creates cascading impacts on the entire ecosystem, by demonstrating how wolves impact two species who have existed in Yellowstone without any natural predators for many years. It is likely that elk will show a steep decreasing trend after wolf reintroduction, as their population was largely uncontrolled for several decades and allowed to explode to high numbers <span class="citation" data-cites="metz2016">(<a href="#ref-metz2016" role="doc-biblioref">Metz et al., 2016</a>)</span>. Bison, which are naturally less vulnerable to predators, will likely respond differently in regards to population numbers, as the decreasing number of elk allows the bison to live in an area where there is now less competition for resources with other species <span class="citation" data-cites="smith2000">(<a href="#ref-smith2000" role="doc-biblioref">Smith et al., 2000</a>)</span>. Through our data analysis, we aim to show the indirect effects of this major change, and we hope to be able to create an easily palatable and understandable reference for people like us, who are otherwise removed from these issues. By making this information more digestible, we hope for our audience to gain a broader understanding of this issue and why it is important to understand trophic dynamics within the ecosystems that we know and love. Additionally, since Colorado has been experimenting with wolf reintroduction since 2023, an action that has been met with widespread controversy and criticism, we hope that our analysis of these impacts will help Coloradans better understand the impacts of bringing the wolf population back to its native habitat. While this conservation initiative has been controversial for many residents in surrounding areas, we hope to help provide a better understanding of why it was done, its impacts, and the importance of efforts like this one.</p>
+</section>
+<section id="data-exploration" class="level2">
+<h2 class="anchored" data-anchor-id="data-exploration">Data Exploration</h2>
 <section id="data-description" class="level4">
 <h4 class="anchored" data-anchor-id="data-description">Data Description</h4>
 <p>The data that we are looking at comes from a study conducted by David Cooper and Tom Hobbs of Colorado State University. Their study investigated Salix height as a response to browsing and the water table <span class="citation" data-cites="cooper">(<a href="#ref-cooper" role="doc-biblioref">Cooper &amp; Hobbs, 2023</a>)</span>.For our study, we are interested in the relationship between wolf population count and grazer population counts (elk and bison). The first dataset that we are using is a bison data csv which includes date, population count, adult count, and calf count. The second dataset is a wolf data csv which includes site, year, and population count. The third dataset is an elk data csv which includes year, mean population count, and upper and lower confidence intervals.</p>
@@ -551,12 +561,26 @@ Attaching package: 'ggpubr'</code></pre>
 </div>
 </div>
 </div></div>
+</section>
+</section>
+<section id="preliminary-methods" class="level2">
+<h2 class="anchored" data-anchor-id="preliminary-methods">Preliminary Methods</h2>
+<p>To analyze this data, we will be doing data exploration using methods such as ANOVA, t-testing, and generating finalized plots. We will be comparing the raw files of annual elk populations and bison populations from 1970 to 2015, which will provide a strong background comparison for time frames both before and after wolf reintroduction, to help us better understand how the ecosystem was established fully before, during, and after this major change. This time frame will provide a sufficient comparison of the effects wolves had when they were introduced. We will begin our analysis with exploratory data techniques, including basic descriptive statistics and visualizations to observe general trends and outliers. From there, we will employ statistical methods such as ANOVA and t-tests to determine whether the changes in population means before and after wolf reintroduction are statistically significant. These methods will help us assess the differences in trends between elk and bison, two species with contrasting responses to wolf predation. Additionally, we will generate visual representations—such as line graphs and bar plots—to display population fluctuations over time. These visualizations will not only help us interpret the data more clearly but will also serve as an effective communication tool for presenting our findings to non-expert audiences. We expect these plots to highlight a decline in elk populations following 1995 and a relatively stable or increasing trend in bison numbers, supporting our hypothesis regarding species-specific predator responses. Given the extensive data there won’t be a need for supplemental material, but this could also pose a challenge when handling such large files. Our selected methods will allow us to compare 2 different prey populations over the same period of time. We hope to see a visual representation of how the introduction affected these populations, and how it also compares to their growth before. By comparing the population trajectories of elk and bison over the same time period and in the same ecological context, we hope to develop a clearer understanding of how apex predators like wolves influence ecosystem structure—not just through direct predation, but through broader cascading effects.</p>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list">
 <div id="ref-cooper" class="csl-entry" role="listitem">
 Cooper, D., &amp; Hobbs, N. (2023). Twenty years of salix height in response to experimental manipulation of browsing and water table, northern range of yellowstone national park. <em>Dryad, Dataset. Https://Doi. Org/10.5061/Dryad. Sqv9s4n7n</em>.
 </div>
+<div id="ref-metz2016" class="csl-entry" role="listitem">
+Metz, M., Smith, D., Stahler, D., Vucetich, J., &amp; Peterson, R. (2016). Temporal variation in wolf predation dynamics in yellowstone: Lessons learned from two decades of research. <em>Yellowstone Science</em>, <em>24</em>, 55–60.
 </div>
-</section>
+<div id="ref-ripple2012" class="csl-entry" role="listitem">
+Ripple, W. J., &amp; Beschta, R. L. (2012). Trophic cascades in yellowstone: The first 15 years after wolf reintroduction. <em>Biological Conservation</em>, <em>145</em>, 205–213. <a href="https://doi.org/10.1016/j.biocon.2011.11.005.
+(https://www.sciencedirect.com/science/article/pii/S0006320711004046)">https://doi.org/10.1016/j.biocon.2011.11.005. (https://www.sciencedirect.com/science/article/pii/S0006320711004046)</a>
+</div>
+<div id="ref-smith2000" class="csl-entry" role="listitem">
+Smith, D. W., Mech, L. D., Meagher, M., Clark, W. E., Jaffe, R., Phillips, M. K., &amp; Mack, J. A. (2000). Wolf–bison interactions in yellowstone national park. <em>Journal of Mammalogy</em>, <em>81</em>(4), 1128–1135.
+</div>
+</div>
 </section>
      </main>
 <!-- /main column -->  <script id="quarto-html-after-body" type="application/javascript">
@@ -978,7 +1002,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"descPosition":"bottom","loop":false,"selector":".lightbox","openEffect":"zoom","closeEffect":"zoom"});
+</script>  </div> <!-- /content -->  <script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","loop":false,"descPosition":"bottom","closeEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
