@@ -1,0 +1,17 @@
+{
+  "hash": "6ac478b85b4227231b77f3df83474e0d",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"ESS330 Yellowstone Project\"\nauthors:\n  - name: Sammy Tetrault\n    affiliation: CSU\n    roles: coding\n    corresponding: true\n  - name: Zoe Gagalis\n    affiliation: CSU\n    roles: coding\n    corresponding: true\n  - name: Zoe Ellis\n    affiliation: CSU\n    roles: coding\n    corresponding: true\ndate: \"2025-04-09\"\nformat: html\nexecute:\n  echo: true\nbibliography: references.bib\n---\n\n\n## Data Exploration\n##### Data Description\nThe data that we are looking at comes from a study conducted by David Cooper and Tom Hobbs of Colorado State University. Their study investigated Salix height as a response to browsing and the water table [@cooper].For our study, we are interested in the relationship between wolf population count and grazer population counts (elk and bison). The first dataset that we are using from Cooper & Hobbs is a bison data csv which includes \n\n##### Opening the data\n\n\n::: {.cell}\n\n```{.r .cell-code .hidden}\nbison_data <- read.csv(\"C:/Users/sammy/OneDrive/Desktop/ESS330/ESS330-Yellowstone-Project/data/BisonData2000_2023.csv\")\n\nelk_data <- read.csv(\"C:/Users/sammy/OneDrive/Desktop/ESS330/ESS330-Yellowstone-Project/data/corrected_elk_counts_09Jul2023_Park_only.csv\")\n\nwolf_data <- read.csv(\"C:/Users/sammy/OneDrive/Desktop/ESS330/ESS330-Yellowstone-Project/data/wolf_1995_2022_population_ynp_nr_nnrr.csv\")\n```\n\n::: {.cell-output .cell-output-stderr .hidden}\n\n```\nWarning in read.table(file = file, header = header, sep = sep, quote = quote, :\nincomplete final line found by readTableHeader on\n'C:/Users/sammy/OneDrive/Desktop/ESS330/ESS330-Yellowstone-Project/data/wolf_1995_2022_population_ynp_nr_nnrr.csv'\n```\n\n\n:::\n:::\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

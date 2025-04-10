@@ -13,14 +13,13 @@ authors:
     affiliation: CSU
     roles: coding
     corresponding: true
-bibliography: docs/references.bib
-date: "2025-04-10"
+date: "2025-04-09"
 format: html
 execute:
   echo: true
-csl: apa.csl
+bibliography: "docs/references.bib"
 ---
-## Data Exploration, all done by Sammy Tetrault
+## Data Exploration
 #### Data Description
 The data that we are looking at comes from a study conducted by David Cooper and Tom Hobbs of Colorado State University. Their study investigated Salix height as a response to browsing and the water table [@cooper].For our study, we are interested in the relationship between wolf population count and grazer population counts (elk and bison). The first dataset that we are using is a bison data csv which includes date, population count, adult count, and calf count. The second dataset is a wolf data csv which includes site, year, and population count. The third dataset is an elk data csv which includes year, mean population count, and upper and lower confidence intervals. 
 
@@ -102,9 +101,8 @@ bison_data <- bison_data %>%
 data <- full_join(wolf_data, elk_data, by = "year") %>%
   full_join(bison_data, by = "year")
 
-#removing NAs, had to google how to remove commas from bison_count to convert to int
-data <- drop_na(data) %>%
-  mutate(bison_count = as.integer(gsub(",", "", bison_count)))
+#removing NAs
+data <- drop_na(data)
 ```
 
 #### Visualizing the data
@@ -122,75 +120,14 @@ wolf_pop_plot = ggplot(data = data, aes(x = year, y = wolf_count)) +
         axis.text.x = element_text(size = 10, color = "black"),
         axis.text.y = element_text(size = 10, color = "black"),
         axis.line = element_line(color = "black", size = 0.5)) +
-  theme_light()
+  ggthemes::theme_fivethirtyeight()
 
 print(wolf_pop_plot)
-
-elk_pop_plot <- ggplot(data = data, aes(x = year, y = elk_count)) +
-  geom_smooth(color = "#613613") +
-  labs(title = "Yellowstone Elk Population 2000-2021",
-       x = "year",
-       y = "elk count") +
-# making axes nicely visible
-  theme(axis.title.x = element_text(size = 12),
-        axis.title.y = element_text(size = 12),
-        axis.text.x = element_text(size = 10, color = "black"),
-        axis.text.y = element_text(size = 10, color = "black"),
-        axis.line = element_line(color = "black", size = 0.5)) +
-  theme_light()
-
-print(elk_pop_plot)
-
-bison_pop_plot <- ggplot(data = data, aes(x = year, y = bison_count)) +
-  geom_smooth(color = "#004100") +
-  labs(title = "Yellowstone Bison Population 2000-2021",
-       x = "year",
-       y = "bison count") +
-# making axes nicely visible
-  theme(axis.title.x = element_text(size = 12),
-        axis.title.y = element_text(size = 12),
-        axis.text.x = element_text(size = 10, color = "black"),
-        axis.text.y = element_text(size = 10, color = "black"),
-        axis.line = element_line(color = "black", size = 0.5)) +
-  theme_light()
-
-print(bison_pop_plot)
 ```
 
-#### Testing the data
 
-First we tested the wolf count data for normality using the Shapiro-Wilk test. This test had a p-value of 5.507e-06, indicating that we should reject the null. The null of this test is that the data is normal, thus this indicates that the wolf population data is not normal.
-```{r}
-shapiro.test(data$wolf_count)
-```
-Next, we tested the elk count data using the same test. Again, the p-value was highly significant(2.789e-07). This indicates that the elk population data is also not normal.
-```{r}
-shapiro.test(data$elk_count)
-```
-Lastly, we tested the bison count data using the same test. Once again, the p-value was highly significant(0.0005066). This suggests that the bison population data is also not normal. 
 
-```{r}
-shapiro.test(data$bison_count)
-```
-The next test we ran was a QQ test. We generated QQ plots for each population count and from looking at the plots found that while the populations do tend to follow the normal distribution line, there are deviations for all three groups, suggesting non-normality. 
-```{r}
-# wolf qqplot
-library(ggpubr)
-wolf_gg = ggqqplot(data$wolf_count) +
-  labs(title = "Wolf QQ Plot")
 
-#elk qqplot
-library(ggpubr)
-elk_gg = ggqqplot(data$elk_count) +
-  labs(title = "Elk QQ Plot")
-
-#bison qqplot
-library(ggpubr)
-bison_gg = ggqqplot(data$bison_count) +
-  labs(title = "Bison QQ Plot")
-
-ggarrange(wolf_gg, elk_gg, bison_gg)
-```
 
 
 
