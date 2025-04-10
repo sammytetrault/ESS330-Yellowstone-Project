@@ -10,8 +10,6 @@ format:
   docx: default
   jats: default
 csl: apa.csl
-execute:
-  freeze: true
 
 
 
