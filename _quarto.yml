@@ -9,5 +9,5 @@ format:
       hypothesis: true
   docx: default
   jats: default
-csl: apa.csl
+csl: styles/apa.csl
 

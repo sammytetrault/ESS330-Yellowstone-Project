@@ -18,7 +18,7 @@ format: html
 execute:
   echo: true
 bibliography: references.bib
-csl: apa.csl
+csl: styles/apa.csl
 ---
 ## Introduction
   Wolf reintroduction after their nearly 70-year absence in Yellowstone National Park has been one of the most highly monitored, discussed, and debated wildlife restoration efforts in recent decades. Following the reintroduction of the wolves (Canis lupus) to this part of Wyoming as a wildlife conservation effort, there have been noticeable changes to surrounding ecosystems, including other mammal populations such as bison and elk, as well as plant populations such as willows and other riparian vegetation within the national park [@ripple2012]. With how extensive this research is presented, as well as how long the study has gone on for, our goal is to zoom in on aspects regarding the predator/prey relationship and its overall effect on Yellowstone. 
@@ -170,9 +170,156 @@ bison_gg = ggqqplot(data$bison_count) +
 
 ggarrange(wolf_gg, elk_gg, bison_gg)
 ```
+#### Creating Models
+```{r}
+library(modeltime)
+library(tidymodels)
+library(timetk)
+library(purrr)
+library(dataRetrieval)
+library(lubridate)
+
+str(data)
+
+data <- data %>%
+  group_by(year) %>%
+  summarize(wolf_count = mean(wolf_count), bison_count = mean(bison_count), elk_count = mean(elk_count)) %>%
+  ungroup()
+
+data <- data %>%
+  mutate(year = ymd(paste0(year, "0101")))
+
+str(data)
+
+splits <- time_series_split(data, assess = "15 years", cumulative = TRUE) ##using approximately 70% of the data for training and 30% for testing
+
+training <- training(splits)
+testing <- testing(splits)
+
+  
+models <- list(
+  #wolf count to predict bison population
+  "Wolf Predict Bison" =
+  arima_reg() %>%
+  set_engine("auto_arima") %>%
+  fit(bison_count ~ wolf_count + year, data = data),
+
+  #wolf count to predict elk population
+  "Wolf Predict Elk" =
+  arima_reg() %>%
+  set_engine("auto_arima") %>%
+  fit(elk_count ~ wolf_count + year, data = data),
+
+  #elk count to predict bison population
+  "Elk Predict Bison" = 
+  arima_reg() %>%
+  set_engine("auto_arima") %>%
+  fit(bison_count ~ elk_count + year, data = data),
+
+  #bison count to predict elk population
+  "Bison Predict Elk" =
+  arima_reg() %>%
+  set_engine("auto_arima") %>%
+  fit(elk_count ~ bison_count + year, data = data)
+)
+
+models_tbl <- as_modeltime_table(models) %>%
+  mutate(.model_id = c("Wolf Predict Bison", "Wolf Predict Elk", "Elk Predict Bison", "Bison Predict Elk"))
+
+calibration_table <- modeltime_calibrate(models_tbl, testing, quiet = FALSE)
+
+modeltime_accuracy(calibration_table)
+
+forecast <- calibration_table %>%
+  modeltime_forecast(new_data = testing, actual_data = data)
+
+```
+
+#### Creating Actual Vs. Predicted Models
+```{r}
+forecast <- forecast %>%
+  filter(.model_desc != "ACTUAL") %>%
+  rename(year = .index)%>%
+  select(.model_id, year, .value)
+
+merged_vals <- merge(forecast, data, by = "year")
+
+wolf_predict_bison <- merged_vals %>%
+  filter(.model_id == "Wolf Predict Bison")
+
+wolf_predict_elk <- merged_vals %>%
+  filter(.model_id == "Wolf Predict Elk")
+
+elk_predict_bison <- merged_vals %>%
+  filter(.model_id == "Elk Predict Bison")
+
+bison_predict_elk <- merged_vals %>%
+  filter(.model_id == "Bison Predict Elk")
+
+lm_wolf_bison <- lm(bison_count ~ .value, data = wolf_predict_bison)
+
+summary(lm_wolf_bison)
+
+lm_wolf_elk <- lm(elk_count ~ .value, data = wolf_predict_elk)
+
+summary(lm_wolf_elk)
+
+lm_elk_bison <- lm(bison_count ~ .value, data = elk_predict_bison)
+
+summary(lm_elk_bison)
+
+lm_bison_elk <- lm(elk_count ~ .value, data = bison_predict_elk)
+
+summary(lm_bison_elk)
+```
+
+#### Plotting Actual Vs. Predicted
+```{r}
+library(ggplot2)
+
+lm_wolf_bison <- ggplot(wolf_predict_bison, aes(x = .value, y = bison_count)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, color = "#613613")+
+  labs(x = "Predicted", y = "Observed",
+       title = "Using Wolf Count to Predict Bison Count")
+
+print(lm_wolf_bison)
+```
+
+```{r}
+library(ggplot2)
+
+lm_wolf_elk <- ggplot(wolf_predict_elk, aes(x = .value, y = elk_count)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, color = "#228B22")+
+  labs(x = "Predicted", y = "Observed",
+       title = "Using Wolf Count to Predict Elk Count")
+
+print(lm_wolf_elk)
+```
+
+```{r}
+library(ggplot2)
+
+lm_elk_bison <- ggplot(elk_predict_bison, aes(x = .value, y = bison_count)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, color = "#01796F")+
+  labs(x = "Predicted", y = "Observed",
+       title = "Using Elk Count to Predict Bison Count")
+
+print(lm_elk_bison)
+```
+```{r}
+library(ggplot2)
+
+lm_bison_elk <- ggplot(bison_predict_elk, aes(x = .value, y = elk_count)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, color = "#006400") +
+  labs(x = "Predicted", y = "Observed",
+       title = "Using Bison Count to Predict Elk Count")
+
+print(lm_bison_elk)
+```
 
 ## Preliminary Methods
   To analyze this data, we will be doing data exploration using methods such as ANOVA, t-testing, and generating finalized plots.  We will be comparing the raw files of annual elk populations and bison populations from 1970 to 2015, which will provide a strong background comparison for time frames both before and after wolf reintroduction, to help us better understand how the ecosystem was established fully before, during, and after this major change. This time frame will provide a sufficient comparison of the effects wolves had when they were introduced. We will begin our analysis with exploratory data techniques, including basic descriptive statistics and visualizations to observe general trends and outliers. From there, we will employ statistical methods such as ANOVA and t-tests to determine whether the changes in population means before and after wolf reintroduction are statistically significant. These methods will help us assess the differences in trends between elk and bison, two species with contrasting responses to wolf predation. Additionally, we will generate visual representations—such as line graphs and bar plots—to display population fluctuations over time. These visualizations will not only help us interpret the data more clearly but will also serve as an effective communication tool for presenting our findings to non-expert audiences. We expect these plots to highlight a decline in elk populations following 1995 and a relatively stable or increasing trend in bison numbers, supporting our hypothesis regarding species-specific predator responses. Given the extensive data there won’t be a need for supplemental material, but this could also pose a challenge when handling such large files.  Our selected methods will allow us to compare 2 different prey populations over the same period of time.  We hope to see a visual representation of how the introduction  affected these populations, and how it also compares to their growth before. By comparing the population trajectories of elk and bison over the same time period and in the same ecological context, we hope to develop a clearer understanding of how apex predators like wolves influence ecosystem structure—not just through direct predation, but through broader cascading effects.
-
-
-
