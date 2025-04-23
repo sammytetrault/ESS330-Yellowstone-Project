@@ -232,7 +232,6 @@ modeltime_accuracy(calibration_table)
 
 forecast <- calibration_table %>%
   modeltime_forecast(new_data = testing, actual_data = data)
-
 ```
 
 #### Creating Actual Vs. Predicted Models
@@ -320,6 +319,80 @@ lm_bison_elk <- ggplot(bison_predict_elk, aes(x = .value, y = elk_count)) +
 
 print(lm_bison_elk)
 ```
+#### GLM Models
+
+##### Wolf vs. Bison
+```{r}
+library(ggplot2)
+library(dplyr)
+library(performance)
+
+data <- data %>%
+  mutate(wolf_count = as.integer(wolf_count)) %>%
+  mutate(bison_count = as.integer(bison_count)) %>%
+  mutate(elk_count = as.integer(elk_count))
+
+wolf_bison_glm <- glm(bison_count ~ wolf_count, family = poisson, data = data)
+
+summary(wolf_bison_glm)
+
+wolf_bison_gg = ggplot(data, aes(x = wolf_count, y = bison_count)) +
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
+  labs(x = "Wolf Count", y = "Bison Count", title = "Wolf Population vs Bison Population")
+
+#calculate McFadden's R-squared for model
+with(summary(wolf_bison_glm), 1 - deviance/null.deviance)
+
+print(wolf_bison_gg)
+```
+##### Wolf vs. Elk
+```{r}
+wolf_elk_glm <- glm(elk_count ~ wolf_count, family = poisson, data = data)
+
+summary(wolf_elk_glm)
+
+wolf_elk_gg = ggplot(data, aes(x = wolf_count, y = elk_count)) +
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
+  labs(x = "Wolf Count", y = "Elk Count", title = "Wolf Population vs Elk Population")
+
+#calculate McFadden's R-squared for model
+with(summary(wolf_elk_glm), 1 - deviance/null.deviance)
+
+print(wolf_elk_gg)
+```
+
+##### Elk vs. Bison
+```{r}
+elk_bison_glm <- glm(bison_count ~ elk_count, family = poisson, data = data)
+
+summary(elk_bison_glm)
+
+elk_bison_gg = ggplot(data, aes(x = elk_count, y = bison_count)) +
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
+  labs(x = "Elk Count", y = "Bison Count", title = "Elk Population vs Bison Population")
+
+#calculate McFadden's R-squared for model
+with(summary(elk_bison_glm), 1 - deviance/null.deviance)
+
+print(elk_bison_gg)
+```
+
+##### Bison vs. Elk
+```{r}
+bison_elk_glm <- glm(elk_count ~ bison_count, family = poisson, data = data)
+
+summary(bison_elk_glm)
+
+bison_elk_gg = ggplot(data, aes(x = bison_count, y = elk_count)) +
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
+  labs(x = "Bison Count", y = "Elk Count", title = "Bison Population vs Elk Population")
+
+#calculate McFadden's R-squared for model
+with(summary(bison_elk_glm), 1 - deviance/null.deviance)
+
+print(bison_elk_gg)
+```
+
 
 ## Preliminary Methods
   To analyze this data, we will be doing data exploration using methods such as ANOVA, t-testing, and generating finalized plots.  We will be comparing the raw files of annual elk populations and bison populations from 1970 to 2015, which will provide a strong background comparison for time frames both before and after wolf reintroduction, to help us better understand how the ecosystem was established fully before, during, and after this major change. This time frame will provide a sufficient comparison of the effects wolves had when they were introduced. We will begin our analysis with exploratory data techniques, including basic descriptive statistics and visualizations to observe general trends and outliers. From there, we will employ statistical methods such as ANOVA and t-tests to determine whether the changes in population means before and after wolf reintroduction are statistically significant. These methods will help us assess the differences in trends between elk and bison, two species with contrasting responses to wolf predation. Additionally, we will generate visual representations—such as line graphs and bar plots—to display population fluctuations over time. These visualizations will not only help us interpret the data more clearly but will also serve as an effective communication tool for presenting our findings to non-expert audiences. We expect these plots to highlight a decline in elk populations following 1995 and a relatively stable or increasing trend in bison numbers, supporting our hypothesis regarding species-specific predator responses. Given the extensive data there won’t be a need for supplemental material, but this could also pose a challenge when handling such large files.  Our selected methods will allow us to compare 2 different prey populations over the same period of time.  We hope to see a visual representation of how the introduction  affected these populations, and how it also compares to their growth before. By comparing the population trajectories of elk and bison over the same time period and in the same ecological context, we hope to develop a clearer understanding of how apex predators like wolves influence ecosystem structure—not just through direct predation, but through broader cascading effects.
