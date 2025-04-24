@@ -185,7 +185,10 @@ div.csl-indent {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
   <li><a href="#data-exploration" id="toc-data-exploration" class="nav-link" data-scroll-target="#data-exploration">Data Exploration</a></li>
-  <li><a href="#preliminary-methods" id="toc-preliminary-methods" class="nav-link" data-scroll-target="#preliminary-methods">Preliminary Methods</a></li>
+  <li><a href="#methods" id="toc-methods" class="nav-link" data-scroll-target="#methods">Methods</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results">Results</a></li>
+  <li><a href="#discussion" id="toc-discussion" class="nav-link" data-scroll-target="#discussion">Discussion</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
   </ul>
 <div class="quarto-alternate-notebooks"><h2>Notebooks</h2><ul><li><a href="index-preview.html"><i class="bi bi-journal-code"></i>Article Notebook</a></li></ul></div></nav>
 </div>
@@ -507,7 +510,7 @@ Attaching package: 'ggpubr'</code></pre>
 ✖ dplyr::lag()      masks stats::lag()
 ✖ yardstick::spec() masks readr::spec()
 ✖ recipes::step()   masks stats::step()
-• Search for functions across packages at https://www.tidymodels.org/find/</code></pre>
+• Dig deeper into tidy modeling with R at https://www.tmwr.org</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(timetk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr hidden">
@@ -1019,9 +1022,141 @@ Number of Fisher Scoring iterations: 4</code></pre>
 </section>
 </section>
 </section>
-<section id="preliminary-methods" class="level2">
-<h2 class="anchored" data-anchor-id="preliminary-methods">Preliminary Methods</h2>
-<p>To analyze this data, we will be doing data exploration using methods such as ANOVA, t-testing, and generating finalized plots. We will be comparing the raw files of annual elk populations and bison populations from 1970 to 2015, which will provide a strong background comparison for time frames both before and after wolf reintroduction, to help us better understand how the ecosystem was established fully before, during, and after this major change. This time frame will provide a sufficient comparison of the effects wolves had when they were introduced. We will begin our analysis with exploratory data techniques, including basic descriptive statistics and visualizations to observe general trends and outliers. From there, we will employ statistical methods such as ANOVA and t-tests to determine whether the changes in population means before and after wolf reintroduction are statistically significant. These methods will help us assess the differences in trends between elk and bison, two species with contrasting responses to wolf predation. Additionally, we will generate visual representations—such as line graphs and bar plots—to display population fluctuations over time. These visualizations will not only help us interpret the data more clearly but will also serve as an effective communication tool for presenting our findings to non-expert audiences. We expect these plots to highlight a decline in elk populations following 1995 and a relatively stable or increasing trend in bison numbers, supporting our hypothesis regarding species-specific predator responses. Given the extensive data there won’t be a need for supplemental material, but this could also pose a challenge when handling such large files. Our selected methods will allow us to compare 2 different prey populations over the same period of time. We hope to see a visual representation of how the introduction affected these populations, and how it also compares to their growth before. By comparing the population trajectories of elk and bison over the same time period and in the same ecological context, we hope to develop a clearer understanding of how apex predators like wolves influence ecosystem structure—not just through direct predation, but through broader cascading effects.</p>
+<section id="methods" class="level2">
+<h2 class="anchored" data-anchor-id="methods">Methods</h2>
+<p>We used two model types for our analysis, ARIMA and Generalized Linear Models. We created 4 ARIMA models, one for each prediction relationship (wolf count as a predictor for bison count and elk count, elk count as a predictor for bison count, and bison count as a predictor for elk count). We split our data into training and testing sets, with a 70/30 split. Models were aggregated in a list object contained within a models dataframe. Using the models dataframe we created a model tibble that we used to calibrate our models using the testing data. Using modeltime_accuracy() we compiled accuracy measures for the calibrated models, and then used our calibrated models to forecast predicted counts based on our data. In order to compare actual values vs.&nbsp;predicted values, we had to merge our forecast dataframe with our original data. We did this by renaming the .index column to “year” so that we could merge the two dataframes by “year”. We then created individual data frames for each prediction model (wolf count as a predictor for bison, …) Using these data frames, we were able to produce linear models for each prediction relationship of the response species’ actual count values versus the predicted count values. We summarized each of these models to produce summary statistics (of note, the R-squared value). To visualize the fit, we used ggplot to create plots of actual vs.&nbsp;predicted values, with a 1:1 line included for each plot to see how closely predictions matched actual values. After producing these plots, we were encouraged to try a different type of model that may better demonstrate the relationship between different populations. We chose to create GLMs for each prediction relationship as we knew that our data was non-normal. We used the Poisson family for our GLM because each of our data points is a count value. We then used the summary() function to compile model metrics. Summary was used to calculate R-squared using McFadden’s formula. Additionally, we used ggplot to create visualizations of each model, using geom_smooth and the method “glm” to create smooth curves of population relationships.</p>
+</section>
+<section id="results" class="level2">
+<h2 class="anchored" data-anchor-id="results">Results</h2>
+<p>In the initial data exploration of “Yellowstone Wolf Population 200-2021” (Figure 1) there is an observed trend over time. This graph displays a starting population of ~125 wolves in Yellowstone Park and follows the reintroduction a few years later, where the population hits its peak at ~150 wolves. The population then decreases to where it eventually plateaus. In “Yellowstone Elk Population 2000-2021”, the population of elk are measured over time. This resulted in a steady exponential decrease. The graph displaying “Yellowstone Bison Population 2001-2021” mirrors the previous trend, and exponentially increases over time, hitting its peak at approximately 3500 bison between the years 2015 and 2020. Next is the Creating vs.&nbsp;Actual Predicted Models where bison_count was the dependent variable. For a one-unit increase in “.value” , there is a 0.94 increase in bison count. This suggests a positive relationship. The p-value is 4.06e-05, showing that statistically the relationship is very strong. The R-squared value is 0.7383, so approximately 74% of the variation in the bison is explained by .value. For the elk population model, the intercept is 37,593, reflecting the starting elk population. The .value is -16.76, meaning the population drops ~16.76 elk per one-unit increase. The R-Squared value falls similar to the bison model, pertaining in the ~74% range. The RSE was 619.7, accounting for a standard deviation of 620 elk. The next call compared the relationship to bison and elk populations, with a .value of 4.968 and an R-squared value of 0.8293, displaying strong relatability between the two populations. In the next call of code, bison-related data is used to predict elk population. Both the intercept and slope have a p &gt; 0.001 indicating high significance, as well as the R-squared value being 0.8709. In the “Elk Population vs Bison Population” graph, there is an apparent exponential decrease with Elk Count (x) as Bison Count (y) increases.</p>
+</section>
+<section id="discussion" class="level2">
+<h2 class="anchored" data-anchor-id="discussion">Discussion</h2>
+<p>Our data analysis showed multiple trends in the data regarding elk, bison, and wolf population in Yellowstone National Park from 2000 to 2021, indicating how wolf reintroduction caused several different interactions in species dynamics and demonstrating the gravity of conservation initiatives like this experiment, which has been impacting species populations within the Yellowstone ecosystem for decades now. The data we analyzed included years 2000-2021, based on availability of good data. The initial increase in the wolf population followed by a plateau suggests rapid growth at the start followed by stabilization of the population, which was likely influenced by the ecosystem’s carrying capacity and availability of various resources that support the population of wolves, indicated by Figure 1.</p>
+<p>Figure 1. Wolf Population from preliminary analysis</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb103"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb103-1"><a href="#cb103-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(wolf_pop_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr hidden">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-18-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-13"><img src="index_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 2 shows the elk population during the same time series, which shows a dramatic decrease followed by stabilization of the population.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(elk_pop_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr hidden">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-19-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-14"><img src="index_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 2. Elk population count from preliminary analysis This rapid decline in elk population count supports the theory of top-down regulation of ecosystem dynamics. Because wolves are carnivorous apex predators and they prey on herbivores like elk, the wolf exert significant pressure on elk populations. This is further substantiated by the elk population model (Figure 2), which demonstrates a negative coefficient (-16.76) for the predictor variable, showing the decline in elk numbers over time over the two decades. With an R-squared value in the 74% range and a relatively high RSE (619.7), the model captures the variability in elk population trends, though some variation remains unaccounted for, likely due to other ecological factors such as climate, disease, or human activity. Bison populations showed a trend in population counts very different from that of the elk in Yellowstone. Shown in Figure 3, we can observe a steady increase followed by a plateau in bison population. This conflicts with the way elk populations responded to wolf reintroduction, despite the herbivorous nature of both elk and bison. The strong positive correlation between time (.value) and bison count (slope = 0.94, p = 4.06e-05) with an R-squared of 0.7383 indicates a substantial and statistically significant rise in bison numbers.The trend in bison population is likely because the decrease in elk population allowed for more robust resource availability and a dramatic decrease in competition for various food sources for bison, which are grazers by nature. So, the increase in bison population was likely a direct response to the decrease in elk population, which was a response to the wolf population increase. The bison population peaks from 2015 to 2020, appearing to stabilize, but it would be fascinating to examine data from 2020 to 2025 to see if there are any unexpected changes, which would be a limitation of our data since we are not observing the most recent years.</p>
+<p>Figure 3. Bison population</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bison_pop_plot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr hidden">
+<pre><code>`geom_smooth()` using method = 'loess' and formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-20-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-15"><img src="index_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Our next step in the analysis of the Yellowstone population data involved testing the distribution data. Shapiro-Wilk tests displayed p-values of 5.507e-06, 2.789e-07, 0.0005066 for wolves, elk, and bison respectively. These values indicate that the data was not normally distributed. Following this, we ran a QQ test, which tests the distribution of the error from the various data. This was shown in Figure 4, which shows the QQ plots from each species.</p>
+<p>Figure 4. QQ plots for wolf, elk, and bison populations.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb109"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb109-1"><a href="#cb109-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">ggarrange</span>(wolf_gg, elk_gg, bison_gg))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-21-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-16"><img src="index_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Next, we made comparative models showing actual vs.&nbsp;predicted values relating to population counts for each species. Our models used each species count as a predictor variable in the population of another species, but as you will see, our models struggled to show real relationships, so this was a challenge we faced in our analysis, requiring us to create different models for species count comparisons. Figure 5 attempts to explain the population dynamics of wolves and bison, but the model barely shows a relationship.</p>
+<p>Figure 5. Bison count predicted by wolf population.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb110"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lm_wolf_bison)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-22-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-17"><img src="index_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Similarly, we made plots to show wolf count predicting elk count, elk count to predict bison count, and bison count to predict elk count (Figures 6, 7, and 8). These plots, again, do not show these predictions very clearly, so this was a hiccup in our analysis.</p>
+<p>Figure 6. Wolf population predicting Elk population.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb111"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb111-1"><a href="#cb111-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lm_wolf_elk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-23-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-18"><img src="index_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 7. Elk count predicting bison population.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb112"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lm_elk_bison)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-24-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-19"><img src="index_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 8. Bison count predicting elk count.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb113"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb113-1"><a href="#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lm_bison_elk)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-25-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-20"><img src="index_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Of these plots, the best one appears to be Figure 7, elk count predicting bison count, just based on the distribution of data points around the 1:1 line, which indicates that this model is decent at predicting values compared to actual values. Lastly, our GLM comparative models examine populations of each species compared with one another throughout the time series. Figure 9 shows wolf population vs.&nbsp;bison population, Figure 10 shows wolf vs.&nbsp;elk populations, Figure 11 shows elk vs.&nbsp;bison counts, and Figure 12 indicates bison vs.&nbsp;elk populations.</p>
+<p>Figure 9. Wolf vs.&nbsp;Bison, Figure 10. Wolf vs.&nbsp;Elk, Figure 11. Elk vs.&nbsp;Bison, Figure 12. Bison vs.&nbsp;Elk</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb114"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggarrange</span>(wolf_bison_gg, wolf_elk_gg, elk_bison_gg, bison_elk_gg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr hidden">
+<pre><code>`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'
+`geom_smooth()` using formula = 'y ~ x'</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-26-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-21"><img src="index_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The strongest model of the four appears to be Elk vs.&nbsp;Bison, with the lowest AIC value of 886.93, compared with values in the thousands for the other models. These comparative models further illustrate interspecies relationships. The model relating elk and bison populations reveals a significant inverse relationship (slope = 4.968, R-squared = 0.8293), suggesting that as bison numbers increase, elk numbers decline. This relationship may reflect not just predation dynamics but also broader shifts in ecosystem dynamics, such as resource redistribution or differing responses to environmental pressures. Furthermore, when bison-related data were used to predict elk population, the exceptionally high R-squared value (0.8709) and statistically significant coefficients reinforce the conclusion that bison trends are a strong predictor of elk population changes. The “Elk Population vs Bison Population” graph visually confirms this inverse exponential relationship, showing how increases in bison population are strongly associated with reductions in elk numbers. This suggests possible competitive exclusion or differing habitat preferences emerging from ecological shifts influenced by wolf reintroduction and other factors. Overall, these findings underscore the complexity of trophic cascades initiated by apex predator reintroduction. They also highlight the importance of multi-species modeling in ecological studies, offering insights into how changes in one population reverberate throughout the ecosystem. Further research incorporating more environmental and anthropogenic variables could refine these models and help park management make more informed conservation decisions. There were a few limitations in our data, including the temporal scope, where we only examined years 2000-2021, where it may be necessary to reanalyze data in the future for the most recent years, since development in species populations, like the plateau in bison counts, were very recently established in 2020. Additionally, the non-normal distribution of our data prevented us from doing certain statistical analyses, and may have indicated a need to perform data transformations. Lastly, our models focused primarily on population counts, and did not incorporate environmental covariates (e.g., vegetation, climate) or human influence (e.g., hunting, land use), which could improve explanatory power. These findings highlight the long-term ecological impact of predator reintroduction and the interconnectedness of various species within ecosystems. As Yellowstone evolves, ongoing data collection is crucial for monitoring changes beyond 2021. Future models may benefit from incorporation of environmental and anthropogenic variables and potentially leverage machine learning for multi-species predictive modeling. Additionally, spatial data and mapping could help clarify how habitat use patterns differ between elk and bison in response to wolf presence.</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>This study illustrates the profound ecological consequences of the reintroduction of wolves into Yellowstone National Park, particularly as seen through the population dynamics of elk and bison from 2000 to 2021. The stabilization of the wolf population was accompanied by a significant decline in elk numbers and a concurrent rise in bison populations, suggesting a trophic cascade caused by wolf reintroduction in the national park. Statistical modeling confirmed strong relationships between these trends, with bison populations increasing in response to ecological shifts in resource competition and predator-prey interactions. The inverse relationship between elk and bison populations, supported by R-squared values and significant p-values, emphasizes the connections between different species within an ecosystem. This information highlights the value of long-term population monitoring and multivariate analysis in understanding the full scope of ecological change. Moving forward, continued data collection and integrated ecosystem modeling will be crucial in guiding conservation policy and management strategies in Yellowstone and beyond. Recognizing how predator dynamics shape broader biodiversity can inform future efforts to restore and sustain ecological balance in protected natural areas.</p>
 
 </section>
 
@@ -1462,7 +1597,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false});
+<script>var lightboxQuarto = GLightbox({"loop":false,"openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
