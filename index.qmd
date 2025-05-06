@@ -280,7 +280,8 @@ lm_wolf_bison <- ggplot(wolf_predict_bison, aes(x = .value, y = bison_count)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, color = "#613613")+
   labs(x = "Predicted", y = "Observed",
-       title = "Using Wolf Count to Predict Bison Count")
+       title = "Using Wolf Count to Predict Bison Count")+
+  theme_light()
 
 print(lm_wolf_bison)
 ```
@@ -292,7 +293,8 @@ lm_wolf_elk <- ggplot(wolf_predict_elk, aes(x = .value, y = elk_count)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, color = "#228B22")+
   labs(x = "Predicted", y = "Observed",
-       title = "Using Wolf Count to Predict Elk Count")
+       title = "Using Wolf Count to Predict Elk Count")+
+  theme_light()
 
 print(lm_wolf_elk)
 ```
@@ -304,7 +306,8 @@ lm_elk_bison <- ggplot(elk_predict_bison, aes(x = .value, y = bison_count)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, color = "#01796F")+
   labs(x = "Predicted", y = "Observed",
-       title = "Using Elk Count to Predict Bison Count")
+       title = "Using Elk Count to Predict Bison Count")+
+  theme_light()
 
 print(lm_elk_bison)
 ```
@@ -315,7 +318,8 @@ lm_bison_elk <- ggplot(bison_predict_elk, aes(x = .value, y = elk_count)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, color = "#006400") +
   labs(x = "Predicted", y = "Observed",
-       title = "Using Bison Count to Predict Elk Count")
+       title = "Using Bison Count to Predict Elk Count")+
+  theme_light()
 
 print(lm_bison_elk)
 ```
@@ -337,8 +341,8 @@ wolf_bison_glm <- glm(bison_count ~ wolf_count, family = poisson, data = data)
 summary(wolf_bison_glm)
 
 wolf_bison_gg = ggplot(data, aes(x = wolf_count, y = bison_count)) +
-  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
-  labs(x = "Wolf Count", y = "Bison Count", title = "Wolf Population vs Bison Population")
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25, color = "#613613") +   labs(x = "Wolf Count", y = "Bison Count", title = "Using Wolf Population to Predict Bison Population")+
+  theme_light()
 
 #calculate McFadden's R-squared for model
 with(summary(wolf_bison_glm), 1 - deviance/null.deviance)
@@ -352,8 +356,9 @@ wolf_elk_glm <- glm(elk_count ~ wolf_count, family = poisson, data = data)
 summary(wolf_elk_glm)
 
 wolf_elk_gg = ggplot(data, aes(x = wolf_count, y = elk_count)) +
-  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
-  labs(x = "Wolf Count", y = "Elk Count", title = "Wolf Population vs Elk Population")
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25, color = "#228B22") + 
+  labs(x = "Wolf Count", y = "Elk Count", title = "Using Wolf Population to Predict Elk Population")+
+  theme_light()
 
 #calculate McFadden's R-squared for model
 with(summary(wolf_elk_glm), 1 - deviance/null.deviance)
@@ -368,8 +373,9 @@ elk_bison_glm <- glm(bison_count ~ elk_count, family = poisson, data = data)
 summary(elk_bison_glm)
 
 elk_bison_gg = ggplot(data, aes(x = elk_count, y = bison_count)) +
-  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
-  labs(x = "Elk Count", y = "Bison Count", title = "Elk Population vs Bison Population")
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25, color = "#01796F") + 
+  labs(x = "Elk Count", y = "Bison Count", title = "Using Elk Population to Predict Bison Population")+
+  theme_light()
 
 #calculate McFadden's R-squared for model
 with(summary(elk_bison_glm), 1 - deviance/null.deviance)
@@ -384,8 +390,9 @@ bison_elk_glm <- glm(elk_count ~ bison_count, family = poisson, data = data)
 summary(bison_elk_glm)
 
 bison_elk_gg = ggplot(data, aes(x = bison_count, y = elk_count)) +
-  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25) + 
-  labs(x = "Bison Count", y = "Elk Count", title = "Bison Population vs Elk Population")
+  geom_smooth(method = "glm", method.args = list(family = poisson), se = TRUE, alpha = 0.25, color = "#006400") + 
+  labs(x = "Bison Count", y = "Elk Count", title = "Using Bison Population to Predict Elk Population")+
+  theme_light()
 
 #calculate McFadden's R-squared for model
 with(summary(bison_elk_glm), 1 - deviance/null.deviance)
