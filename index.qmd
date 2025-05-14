@@ -1,5 +1,5 @@
 ---
-title: "ESS330 Yellowstone Project"
+title: "Wolf and Prey Population Dynamics in Yellowstone"
 authors:
   - name: Sammy Tetrault
     affiliation: CSU
